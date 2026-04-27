@@ -11,51 +11,43 @@
  */
 int delete_dnodeint_at_index(dlistint_t **head, unsigned int index)
 {
-    dlistint_t *saved_head, *tmp;
-    unsigned int p = 0;
+	dlistint_t *saved_head;
+	dlistint_t *tmp;
+	unsigned int p;
 
-    if (head == NULL || *head == NULL)
-        return (-1);
-
-    saved_head = *head;
-
-    /* move to the node at index */
-    while (p < index && *head != NULL)
-    {
-        *head = (*head)->next;
-        p++;
-    }
-
-    if (*head == NULL)  /* index out of range */
-    {
-        *head = saved_head;
-        return (-1);
-    }
-
-    /* delete head */
-    if (index == 0)
-    {
-        tmp = (*head)->next;
-        free(*head);
-        *head = tmp;
-
-        if (tmp)
-            tmp->prev = NULL;
-
-        return (1);
-    }
-
-    /* delete middle or tail node */
-    tmp = *head;
-
-    if (tmp->prev != NULL)
-        tmp->prev->next = tmp->next;
-
-    if (tmp->next != NULL)
-        tmp->next->prev = tmp->prev;
-
-    free(tmp);
-
-    *head = saved_head;
-    return (1);
+	if (*head == NULL)
+	{
+		return (-1);
+	}
+	saved_head = *head;
+	p = 0;
+	while (p < index && *head != NULL)
+	{
+		*head = (*head)->next;
+		p++;
+	}
+	if (p != index)
+	{
+		*head = saved_head;
+		return (-1);
+	}
+	if (0 == index)
+	{
+		tmp = (*head)->next;
+		free(*head);
+		*head = tmp;
+		if (tmp != NULL)
+		{
+			tmp->prev = NULL;
+		}
+	}
+	else
+	{
+		(*head)->prev->next = (*head)->next;
+		free(*head);
+		if ((*head)->next)
+			(*head)->next->prev = (*head)->prev;
+		*head = saved_head;
+	}
+	return (1);
 }
